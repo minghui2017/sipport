@@ -28,6 +28,7 @@ class AdminController extends BaseController
 
     use \app\common\traits\JumpTrait;
 
+    protected $user,$u_id;
     /**
      * 当前模型
      * @Model
@@ -206,4 +207,16 @@ class AdminController extends BaseController
         $this->success(null, $data);
     }
 
+    public function getUserInfoByWhere($where = array()){
+
+        $field=['u.*','c.c_name','c.c_sn','cu.company_status','cu.user_role u_role','cu.company_id','cu.company_status u_status','cu.company_user_id'];
+        $user = Db::name('user')
+            ->alias('u')
+            ->where($where)
+            ->leftJoin('company_user cu','u.company_user_id=cu.company_user_id')
+            ->leftJoin('company c','cu.company_id=c.c_id')
+            ->field($field)
+            ->find();
+        return $user;
+    }
 }
